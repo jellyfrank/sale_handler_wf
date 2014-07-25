@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+		<data>
+				<record model="workflow" id="sh_wf">
+						<field name="name">sh.wf</field>
+						<field name="osv">sale.handler</field>
+						<field name="on_create">True</field>
+				</record>
+
+				<record model="workflow.activity" id="act_new">
+						<field name="wkf_id" ref="sh_wf"/>
+						<field name="flow_start">True</field>
+						<field name="name">new</field>
+						<field name="kind">function</field>
+						<field name="action">sh_new()</field>
+				</record>
+
+				<record model="workflow.activity" id="act_purchase">
+						<field name="wkf_id" ref="sh_wf"/>
+						<field name="name">purchase</field>
+						<field name="kind">function</field>
+						<field name="action">sh_purchase()</field>
+				</record>
+
+				<record model="workflow.activity" id="act_stock">
+						<field name="wkf_id" ref="sh_wf"/>
+						<field name="name">stock</field>
+						<field name="kind">function</field>
+						<field name="action">sh_stock()</field>
+				</record>
+
+				<record model="workflow.activity" id="act_account">
+						<field name="wkf_id" ref="sh_wf"/>
+						<field name="name">account</field>
+						<field name="kind">function</field>
+						<field name="action">sh_account()</field>
+				</record>
+				<record model="workflow.activity" id="act_done">
+						<field name="wkf_id" ref="sh_wf"/>
+						<field name="flow_stop">True</field>
+						<field name="name">done</field>
+						<field name="kind">function</field>
+						<field name="action">sh_done()</field>
+				</record>
+
+
+				<record model="workflow.transition" id="t1">
+						<field name="act_from" ref="act_new"/>
+						<field name="act_to" ref="act_purchase"/>
+						<field name="signal">sh_purchase</field>
+				</record>
+
+				<record model="workflow.transition" id="t2">
+						<field name="act_from" ref="act_purchase"/>
+						<field name="act_to" ref="act_stock"/>
+						<field name="signal">sh_stock</field>
+				</record>
+
+				<record model="workflow.transition" id="t3">
+						<field name="act_from" ref="act_stock"/>
+						<field name="act_to" ref="act_account"/>
+						<field name="signal">sh_account</field>
+				</record>
+
+				<record model="workflow.transition" id="t4">
+						<field name="act_from" ref="act_account"/>
+						<field name="act_to" ref="act_done"/>
+						<field name="signal">sh_done</field>
+				</record>
+		</data>
+</openerp>

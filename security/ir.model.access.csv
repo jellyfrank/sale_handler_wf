@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+sale_handler_sale,sale_handler sale,sale_handler_wf.model_sale_handler,sale_handler_group_sale,1,1,1,1
+sale_handler_purchase,sale_handler purchase,sale_handler_wf.model_sale_handler,sale_handler_group_purchase,1,1,0,0
+sale_handler_stock,sale_handler stock,sale_handler_wf.model_sale_handler,sale_handler_group_stock,1,1,0,0
+sale_handler_account,sale_handler account,sale_handler_wf.model_sale_handler,sale_handler_group_account,1,1,0,0

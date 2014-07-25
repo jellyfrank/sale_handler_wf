@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+		<data>
+				<record model="ir.ui.view" id="sale_handler_form_view">
+						<field name="name">sale.handler.form.view</field>
+						<field name="model">sale.handler</field>
+						<field name="type">form</field>
+						<field name="arch" type="xml">
+								<form string="Sale Handler Workflow" version="7.0">
+										<header>
+												<button name="btn_purchase" states="new" string="Forward To Purchase" type="object" groups='sale_handler_wf.sale_handler_group_sale' />
+												<button name="btn_stock" states="purchase" string="Forward To Stock" type="object"  groups='sale_handler_wf.sale_handler_group_purchase'/>
+												<button name="btn_account" states="stock" string="Forward To Account" type="object" groups='sale_handler_wf.sale_handler_group_stock'/>
+												<button name="btn_done" states="account" string="Done" type="object" groups='sale_handler_wf.sale_handler_group_account'/> 
+												<field name="state" widget="statusbar"/>
+										</header>
+										<group>
+												<field name="partner_id" required="1" />
+										</group>
+										<group>
+										</group>
+										<group>
+												<field name="text"/>
+										</group>
+								</form>
+						</field>
+				</record>
+				<record model="ir.ui.view" id="sale_handler_tree_view">
+						<field name="name">sale.handler.tree.view</field>
+						<field name="model">sale.handler</field>
+						<field name="type">tree</field>
+						<field name="arch" type="xml">
+								<tree string="Sale Handler Workflow" >
+										<field name="partner_id"/>
+										<field name="text"/>
+										<field name="state"/>
+								</tree>
+						</field>
+				</record>
+				<record model="ir.actions.act_window" id="action_sale_handler_form">
+						<field name="name">action.sale.handler</field>
+						<field name="type">ir.actions.act_window</field>
+						<field name="res_model">sale.handler</field>
+						<field name="view_mode">tree,form</field>
+						<field name="view_type">form</field>
+						<field name="view_id" ref="sale_handler_tree_view"/>
+				</record>
+				<menuitem id="menu_sale_handler" parent="base.menu_sales" name="Sale Handler"  action="action_sale_handler_form" groups="sale_handler_wf.sale_handler_group_sale"/>
+
+				<menuitem id="menu_sale_handler_purchase_root" parent="base.menu_purchase_root" name="Sale Handler" groups="sale_handler_wf.sale_handler_group_purchase"/>
+
+				<menuitem id="menu_sale_handler_purchase_item" parent="menu_sale_handler_purchase_root" name="Sale Handler" action="action_sale_handler_form"/>
+				
+				<menuitem id="menu_sale_handler_stock_root" parent="stock.menu_stock_root" name="Sale Handler" groups="sale_handler_wf.sale_handler_group_stock"/>
+
+				<menuitem id="menu_sale_handler_stock_item" parent="menu_sale_handler_stock_root" name="Sale Handler" action="action_sale_handler_form" groups="sale_handler_wf.sale_handler_group_stock"/>
+
+				<menuitem id="menu_sale_handler_account_root" parent="account.menu_finance" name="Sale Handler Account" groups="sale_handler_wf.sale_handler_group_account"/>
+
+				<menuitem id="menu_sale_handler_account_item" parent="menu_sale_handler_account_root" name="Sale Handler" action="action_sale_handler_form" groups="sale_handler_wf.sale_handler_group_account"/>
+
+				<record model="ir.ui.view" id="sale_handler_inherit_form_view">
+						<field name="name">sale.handler.inherit.form</field>
+						<field name="model">sale.handler</field>
+						<field name="inherit_id" ref="sale_handler_form_view"/>
+						<field name="groups_id" eval="[(6,0,[ref('sale_handler_group_purchase'),ref('sale_handler_group_stock'),ref('sale_handler_group_account')])]"/>
+						<field name="arch" type="xml">
+								<field name="partner_id" position="attributes">
+										<attribute name="readonly">1</attribute>
+								</field>
+						</field>
+				</record>
+				
+				<record model="ir.ui.view" id="sale_handler_inherit_form_view2">
+						<field name="name">sale.handler.inherit.form</field>
+						<field name="model">sale.handler</field>
+						<field name="inherit_id" ref="sale_handler_form_view"/>
+						<field name="groups_id" eval="[(6,0,[ref('sale_handler_group_sale')])]"/>
+						<field name="arch" type="xml">
+								<field name="partner_id" position="attributes">
+										<attribute name="readonly">0</attribute>
+								</field>
+						</field>
+				</record>
+
+				<act_window context="{'search_default_unreconciled':True, 'search_default_partner_id':[partner_id]}" domain="('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])" id="sale_handler_view_account"	name="view account" res_model="account.move.line" src_model="sale.handler" />
+				
+		</data>
+</openerp>
